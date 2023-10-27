@@ -7,21 +7,21 @@ LIBRARY_NAME = mylibrary
 SOURCE_DIR = src
 INCLUDE_DIR = include
 OBJECT_DIR = obj
-BIN_DIR = bin
+OUT_DIR = lib
 TEST_DIR = test
 
 SOURCE_FILES = $(wildcard $(SOURCE_DIR)/*.c)
 OBJECT_FILES = $(patsubst $(SOURCE_DIR)/%.c, $(OBJECT_DIR)/%.o, $(SOURCE_FILES))
-LIBRARY_FILE = $(BIN_DIR)/lib$(LIBRARY_NAME).a
+LIBRARY_FILE = $(OUT_DIR)/lib$(LIBRARY_NAME).a
 
 TEST_SOURCE_FILES = $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJECT_FILES = $(patsubst $(TEST_DIR)/%.c, $(OBJECT_DIR)/%.o, $(TEST_SOURCE_FILES))
-TEST_EXECUTABLE = $(BIN_DIR)/test_program
+TEST_EXECUTABLE = $(OUT_DIR)/test_program
 
 all: $(LIBRARY_FILE)
 
 $(LIBRARY_FILE): $(OBJECT_FILES)
-	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(OUT_DIR)
 	$(AR) $(ARFLAGS) $@ $^
 
 $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.c
@@ -33,11 +33,11 @@ $(OBJECT_DIR)/%.o: $(TEST_DIR)/%.c
 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -I$(TEST_DIR) -o $@ $<
 
 test: $(LIBRARY_FILE) $(TEST_OBJECT_FILES)
-	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(OUT_DIR)
 	$(CC) -o $(TEST_EXECUTABLE) $(TEST_OBJECT_FILES) $(LIBRARY_FILE)
 	$(TEST_EXECUTABLE)
 
 clean:
-	rm -f $(LIBRARY_FILE) $(OBJECT_DIR)/*.o $(BIN_DIR)/test_program
-	rm -rf $(BIN_DIR) $(OBJECT_DIR)
+	rm -f $(LIBRARY_FILE) $(OBJECT_DIR)/*.o $(OUT_DIR)/test_program
+	rm -rf $(OUT_DIR) $(OBJECT_DIR)
 
